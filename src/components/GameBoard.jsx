@@ -1,8 +1,17 @@
-function GameBoard() {
+import "../styles.css/GameBoard.css";
+import Card from "./Card";
+function GameBoard({ pokemonData, setPokemonData }) {
   return (
-    <>
-      <h1>GameBoard</h1>
-      
-    </>
+    <div className="gameboard">
+      {pokemonData.map((pokemon) => (
+        <Card
+          key={pokemon.name}
+          pokemonName={pokemon.name}
+          pokemonImage={pokemon.image}
+        />
+      ))}
+    </div>
   );
 }
+
+export default GameBoard;

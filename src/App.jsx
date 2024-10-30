@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import Card from "./components/Card";
+import GameBoard from "./components/GameBoard";
 
 function App() {
   const [pokemonData, setPokemonData] = useState([]);
@@ -25,7 +26,8 @@ function App() {
     const data = await response.json();
     const image = data.sprites.front_default;
     const name = data.name;
-    return { name, image };
+    const clicked = false;
+    return { name, image, clicked };
   };
 
   useEffect(() => {
@@ -51,6 +53,7 @@ function App() {
 
         setPokemonData(pokemonCardData);
         localStorage.setItem("pokemonData", JSON.stringify(pokemonCardData));
+        console.log(pokemonCardData);
       }
     };
 
@@ -58,13 +61,7 @@ function App() {
   }, []);
 
   return (
-    <>
-      {pokemonData.map((pokemon) => (
-        <div key={pokemon.name}>
-          <img src={pokemon.image} alt={pokemon.name} />
-        </div>
-      ))}
-    </>
+    <GameBoard pokemonData={pokemonData} setPokemonData={setPokemonData} />
   );
 }
 
