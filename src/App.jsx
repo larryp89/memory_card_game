@@ -1,35 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
+import Card from "./components/Card";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [pokemonData, setPokemonData] = useState([]);
+
+  // Must define an async function as using await
+  const getPokemonList = async () => {
+    // Await the promise from fetch, which returns the response object
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=50");
+    // Check if the response is okay (status in the range 200-299)
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    // Extract the JSON data (returned as a promise) from the response object
+    const data = await response.json();
+    // Return only the results array from the data object, which contains the Pokémon
+    return data.results;
+  };
+
+  // Returns the name and image for url
+  const getPokemonDetails = async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    const image = data.sprites.front_default;
+    const name = data.name;
+    return { name, image };
+  };
+
+  useEffect(() => {
+    // Have to have a function within useEffect as cannot use await in useEffect
+    const fetchData = async () => {
+      // Attempt to get any cahced data from local storage
+      const cachedData = localStorage.getItem("pokemonData");
+      // If there's cached data, use it to set the state
+      if (cachedData) {
+        setPokemonData(JSON.parse(cachedData));
+        // Otherwise
+      } else {
+        // Fetch list of pokemon data from the API
+        const list = await getPokemonList();
+        // Use Promise.all to wait for all the asynchronous operations to finish.
+        const pokemonCardData = await Promise.all(
+          // Note that must use async anonymous function in order to then use await
+          list.map(async (entry) => {
+            // For each entry, return the object via getPokemonDetails
+            return await getPokemonDetails(entry.url);
+          })
+        );
+
+        setPokemonData(pokemonCardData);
+        localStorage.setItem("pokemonData", JSON.stringify(pokemonCardData));
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {pokemonData.map((pokemon) => (
+        <div key={pokemon.name}>
+          <img src={pokemon.image} alt={pokemon.name} />
+        </div>
+      ))}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
