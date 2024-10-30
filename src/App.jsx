@@ -58,18 +58,6 @@ function App() {
     fetchData();
   }, []);
 
-  const checkIfClicked = (pokemonName) => {
-    pokemonData.map((pokemon) => {
-      // If the pokemon name equals pokemon name
-      if (pokemon.name === pokemonName) {
-        if (pokemon.clicked) console.log(pokemon.clicked);
-        else {
-          console.log(pokemon.clicked);
-        }
-      }
-    });
-  };
-
   // Reset each clicked to false
   const resetAll = () => {
     setPokemonData((prevData) =>
@@ -83,14 +71,13 @@ function App() {
 
   // Change clicked from false to true if the class is clicked
   const handleClick = (pokemonName) => {
-    checkIfClicked(pokemonName);
+    // checkIfClicked(pokemonName);
     setPokemonData((prevData) =>
       prevData.map((pokemon) =>
-        pokemon.name === pokemonName
-          ? { ...pokemon, clicked: !pokemon.clicked }
-          : pokemon
+        pokemon.name === pokemonName ? { ...pokemon, clicked: true } : pokemon
       )
     );
+    console.log(pokemonData);
   };
 
   return (
