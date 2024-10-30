@@ -50,18 +50,56 @@ function App() {
             return await getPokemonDetails(entry.url);
           })
         );
-
         setPokemonData(pokemonCardData);
         localStorage.setItem("pokemonData", JSON.stringify(pokemonCardData));
-        console.log(pokemonCardData);
       }
     };
 
     fetchData();
   }, []);
 
+  const checkIfClicked = (pokemonName) => {
+    pokemonData.map((pokemon) => {
+      // If the pokemon name equals pokemon name
+      if (pokemon.name === pokemonName) {
+        if (pokemon.clicked) console.log(pokemon.clicked);
+        else {
+          console.log(pokemon.clicked);
+        }
+      }
+    });
+  };
+
+  // Reset each clicked to false
+  const resetAll = () => {
+    setPokemonData((prevData) =>
+      // Set new data to previous data but copy each pokemon, updating clicked to false
+      prevData.map((pokemon) => ({
+        ...pokemon,
+        clicked: false,
+      }))
+    );
+  };
+
+  // Change clicked from false to true if the class is clicked
+  const handleClick = (pokemonName) => {
+    checkIfClicked(pokemonName);
+    setPokemonData((prevData) =>
+      prevData.map((pokemon) =>
+        pokemon.name === pokemonName
+          ? { ...pokemon, clicked: !pokemon.clicked }
+          : pokemon
+      )
+    );
+  };
+
   return (
-    <GameBoard pokemonData={pokemonData} setPokemonData={setPokemonData} />
+    <GameBoard
+      pokemonData={pokemonData}
+      setPokemonData={setPokemonData}
+      handleClick={handleClick}
+      resetBoard={resetAll}
+    />
   );
 }
 
