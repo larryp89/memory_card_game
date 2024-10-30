@@ -1,11 +1,46 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import Card from "./components/Card";
 import GameBoard from "./components/GameBoard";
+import { shuffleArray } from "./utils";
 
 function App() {
   const [pokemonData, setPokemonData] = useState([]);
+  const [score, setScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
+  const [clickedPokemon, setClickedPokemon] = useState(null);
 
+  useEffect(() => {
+    if (clickedPokemon) {
+      setScore((prevScore) => prevScore + 1);
+      setClickedPokemon(null); // Reset after updating the score
+    }
+  }, [clickedPokemon]); // Only runs when ClickedPokemon changes
+
+  const handleClick = (pokemonName) => {
+    setPokemonData((prevData) => {
+      const updatedData = prevData.map((pokemon) => {
+        if (pokemon.name === pokemonName) {
+          if (pokemon.clicked) {
+            console.log("game over");
+            resetAll();
+            return pokemon;
+          } else {
+            setClickedPokemon(pokemonName); // Set to trigger score update in useEffect
+            return { ...pokemon, clicked: true };
+          }
+        }
+        return pokemon;
+      });
+
+      return shuffleArray(updatedData);
+    });
+  };
+
+  const resetScoreBoard = () => {
+    setScore(0);
+  };
+
+  // Get pokemon list data from API
   // Must define an async function as using await
   const getPokemonList = async () => {
     // Await the promise from fetch, which returns the response object
@@ -58,7 +93,7 @@ function App() {
     fetchData();
   }, []);
 
-  // Reset each clicked to false
+  // Reset all clicked to false
   const resetAll = () => {
     setPokemonData((prevData) =>
       // Set new data to previous data but copy each pokemon, updating clicked to false
@@ -67,17 +102,7 @@ function App() {
         clicked: false,
       }))
     );
-  };
-
-  // Change clicked from false to true if the class is clicked
-  const handleClick = (pokemonName) => {
-    // checkIfClicked(pokemonName);
-    setPokemonData((prevData) =>
-      prevData.map((pokemon) =>
-        pokemon.name === pokemonName ? { ...pokemon, clicked: true } : pokemon
-      )
-    );
-    console.log(pokemonData);
+    resetScoreBoard();
   };
 
   return (
@@ -86,6 +111,8 @@ function App() {
       setPokemonData={setPokemonData}
       handleClick={handleClick}
       resetBoard={resetAll}
+      score={score}
+      bestScore={bestScore}
     />
   );
 }
