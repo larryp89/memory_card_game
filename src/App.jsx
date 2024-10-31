@@ -16,6 +16,12 @@ function App() {
     }
   }, [clickedPokemon]); // Only runs when ClickedPokemon changes
 
+  useEffect(() => {
+    if (score > bestScore) {
+      setBestScore(score);
+    }
+  }, [score]);
+
   const handleClick = (pokemonName) => {
     setPokemonData((prevData) => {
       const updatedData = prevData.map((pokemon) => {
@@ -68,7 +74,7 @@ function App() {
   useEffect(() => {
     // Have to have a function within useEffect as cannot use await in useEffect
     const fetchData = async () => {
-      // Attempt to get any cahced data from local storage
+      // Attempt to get any cached data from local storage
       const cachedData = localStorage.getItem("pokemonData");
       // If there's cached data, use it to set the state
       if (cachedData) {
