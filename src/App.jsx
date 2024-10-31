@@ -8,6 +8,7 @@ function App() {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [clickedPokemon, setClickedPokemon] = useState(null);
+  const [flipped, setFlipped] = useState(false);
 
   useEffect(() => {
     if (clickedPokemon) {

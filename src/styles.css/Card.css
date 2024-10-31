@@ -1,3 +1,29 @@
 .pokemon-card {
   border: 1px solid black;
+  width: 100px;
+  height: 200px;
+  cursor: pointer;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+}
+
+.pokemon-card.show {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;
+  place-content: center;
+  backface-visibility: hidden;
+}
+
+.card-front {
+  background-color: transparent;
+}
+
+.card-back {
+  transform: rotateY(180deg);
 }

@@ -7,6 +7,7 @@ function GameBoard({
   resetBoard,
   score,
   bestScore,
+  flipped
 }) {
   return (
     <>
@@ -18,6 +19,7 @@ function GameBoard({
             pokemonName={pokemon.name}
             pokemonImage={pokemon.image}
             handleClick={handleClick}
+            flipped={flipped}
           />
         ))}
       </div>
