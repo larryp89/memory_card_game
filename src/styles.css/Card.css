@@ -27,3 +27,8 @@
 .card-back {
   transform: rotateY(180deg);
 }
+
+.card-back img {
+  width: 100px;
+  height: 200px;
+}

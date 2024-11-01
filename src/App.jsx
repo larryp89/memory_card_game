@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import "./App.css";
-import GameBoard from "./components/GameBoard";
+import { useState, useEffect } from "react";
 import { shuffleArray } from "./utils";
+import GameBoard from "./components/GameBoard";
 
 function App() {
   const [pokemonData, setPokemonData] = useState([]);
@@ -9,20 +9,56 @@ function App() {
   const [bestScore, setBestScore] = useState(0);
   const [clickedPokemon, setClickedPokemon] = useState(null);
   const [flipped, setFlipped] = useState(false);
+  const [difficulty, setDifficulty] = useState("Easy");
+  const [cardCount, setCardCount] = useState(6);
 
+  // Set the difficultl level
+  const handleDifficultyClick = (e) => {
+    setDifficulty(e.target.id);
+  };
+
+  // Update card count based on difficulty
+  useEffect(() => {
+    if (difficulty === "Easy") {
+      setCardCount(6);
+    } else if (difficulty === "Medium") {
+      setCardCount(12);
+    } else if (difficulty === "Hard") {
+      setCardCount(18);
+    } else if (difficulty === "Insane") {
+      setCardCount(36);
+    }
+  }, [difficulty]);
+
+  // Batch update when a pokemon card is clicked
   useEffect(() => {
     if (clickedPokemon) {
+      // Update score
       setScore((prevScore) => prevScore + 1);
-      setClickedPokemon(null); // Reset after updating the score
-    }
-  }, [clickedPokemon]); // Only runs when ClickedPokemon changes
 
+      // Flip all cards and shuffle
+      setFlipped((prevFlip) => !prevFlip);
+      setTimeout(
+        () => setPokemonData((prevData) => shuffleArray(prevData)),
+        500
+      );
+
+      // Reset flipped back after 1 second
+      setTimeout(() => setFlipped((prevFlip) => !prevFlip), 1000);
+
+      // Reset clickedPokemon after processing
+      setClickedPokemon(null);
+    }
+  }, [clickedPokemon]);
+
+  // Update best score
   useEffect(() => {
     if (score > bestScore) {
       setBestScore(score);
     }
   }, [score]);
 
+  // Logic for checking if a new pokemon was clicked and updating clicked to true
   const handleClick = (pokemonName) => {
     setPokemonData((prevData) => {
       const updatedData = prevData.map((pokemon) => {
@@ -39,7 +75,7 @@ function App() {
         return pokemon;
       });
 
-      return shuffleArray(updatedData);
+      return updatedData;
     });
   };
 
@@ -47,7 +83,7 @@ function App() {
     setScore(0);
   };
 
-  // Get pokemon list data from API
+  // Get first 50 pokemon list data from API
   // Must define an async function as using await
   const getPokemonList = async () => {
     // Await the promise from fetch, which returns the response object
@@ -72,14 +108,16 @@ function App() {
     return { name, image, clicked };
   };
 
+  // For each pokemon, get data from local storage or fetch from API and set for pokemonCardData
   useEffect(() => {
-    // Have to have a function within useEffect as cannot use await in useEffect
+    // Have to have a function within useEffect as cannot use await directly in useEffect
     const fetchData = async () => {
       // Attempt to get any cached data from local storage
       const cachedData = localStorage.getItem("pokemonData");
       // If there's cached data, use it to set the state
       if (cachedData) {
-        setPokemonData(JSON.parse(cachedData));
+        const parsedData = JSON.parse(cachedData);
+        setPokemonData(parsedData.slice(0, cardCount)); // Limit to card count
         // Otherwise
       } else {
         // Fetch list of pokemon data from the API
@@ -98,9 +136,9 @@ function App() {
     };
 
     fetchData();
-  }, []);
+  }, [cardCount]);
 
-  // Reset all clicked to false
+  // Reset all "clicked" to false
   const resetAll = () => {
     setPokemonData((prevData) =>
       // Set new data to previous data but copy each pokemon, updating clicked to false
@@ -110,6 +148,7 @@ function App() {
       }))
     );
     resetScoreBoard();
+    setFlipped(false);
   };
 
   return (
@@ -120,6 +159,8 @@ function App() {
       resetBoard={resetAll}
       score={score}
       bestScore={bestScore}
+      flipped={flipped}
+      handleDifficultyClick={handleDifficultyClick}
     />
   );
 }

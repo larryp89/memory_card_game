@@ -1,10 +1,10 @@
 import "../styles.css/Card.css";
 import backImage from "../assets/pokemon-card.png";
 
-function Card({ pokemonName, pokemonImage, handleClick }) {
+function Card({ pokemonName, pokemonImage, handleClick, flipped }) {
   return (
     <div
-      className={`pokemon-card `}
+      className={`pokemon-card ${flipped ? "show" : ""}`}
       id={pokemonName}
       onClick={() => handleClick(pokemonName)}
     >
