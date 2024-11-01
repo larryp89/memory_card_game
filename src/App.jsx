@@ -181,7 +181,6 @@ function App() {
       <Header />
       <Modal
         handleDifficultyClick={handleDifficultyClick}
-        closeModal={closeModal}
         isModalOpen={isModalOpen}
         text="Select a difficulty:"
       />

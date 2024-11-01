@@ -3,13 +3,7 @@ import Card from "./Card";
 import ScoreBoard from "./ScoreBoard";
 import Button from "./Button";
 
-function GameBoard({
-  pokemonData,
-  handleClick,
-  score,
-  bestScore,
-  flipped,
-}) {
+function GameBoard({ pokemonData, handleClick, score, bestScore, flipped }) {
   return (
     <>
       <ScoreBoard score={score} bestScore={bestScore} />

@@ -3,6 +3,9 @@ import Button from "./Button";
 function Modal({ handleDifficultyClick, closeModal, isModalOpen, text }) {
   return (
     <>
+      <p>
+        Click as many Pokémon as you can without choosing the same one twice!
+      </p>
       {isModalOpen && (
         <div className="modal">
           <h3 onClick={closeModal}>{text}</h3>

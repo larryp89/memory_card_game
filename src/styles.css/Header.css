@@ -1,3 +1,22 @@
+h1 {
+}
 .header span {
-  color: red;
+  color: rgb(51, 101, 172);
+  font-style: italic;
+}
+h1.header {
+  color: rgb(253, 202, 6);
+}
+
+h1.header {
+  color: rgb(253, 202, 6); /* Text color */
+  text-shadow: -1px -1px 0 #000, /* Top-left shadow */ 1px -1px 0 #000,
+    /* Top-right shadow */ -1px 1px 0 #000,
+    /* Bottom-left shadow */ 1px 1px 0 #000; /* Bottom-right shadow */
+}
+
+.header span {
+  color: rgb(51, 101, 172);
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
