@@ -14,6 +14,7 @@ function App() {
   const [difficulty, setDifficulty] = useState("Easy");
   const [cardCount, setCardCount] = useState(6);
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Close modal
   const closeModal = () => {
@@ -56,18 +57,16 @@ function App() {
   // Batch update when a pokemon card is clicked
   useEffect(() => {
     if (clickedPokemon) {
-      // Update score
+      setIsProcessing(true); // Prevent further clicks while processing
       setScore((prevScore) => prevScore + 1);
 
       // Flip all cards and shuffle
       setFlipped((prevFlip) => !prevFlip);
-      setTimeout(
-        () => setPokemonData((prevData) => shuffleArray(prevData)),
-        500
-      );
-
-      // Reset flipped back after 1 second
-      setTimeout(() => setFlipped((prevFlip) => !prevFlip), 1000);
+      setTimeout(() => {
+        setPokemonData((prevData) => shuffleArray(prevData));
+        setFlipped((prevFlip) => !prevFlip); // Reset flipped back after 1 second
+        setIsProcessing(false); // Allow clicks again
+      }, 1000);
 
       // Reset clickedPokemon after processing
       setClickedPokemon(null);
@@ -84,11 +83,11 @@ function App() {
 
   // Logic for checking if a new pokemon was clicked and updating clicked to true
   const handleClick = (pokemonName) => {
+    if (isProcessing) return;
     setPokemonData((prevData) => {
       const updatedData = prevData.map((pokemon) => {
         if (pokemon.name === pokemonName) {
           if (pokemon.clicked) {
-            console.log("game over");
             resetAll();
             return pokemon;
           } else {
@@ -184,6 +183,7 @@ function App() {
         handleDifficultyClick={handleDifficultyClick}
         closeModal={closeModal}
         isModalOpen={isModalOpen}
+        text="Select a difficulty:"
       />
       <div className="game-area">
         <GameBoard

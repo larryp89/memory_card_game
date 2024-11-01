@@ -1,11 +1,11 @@
 import Button from "./Button";
 
-function Modal({ handleDifficultyClick, closeModal, isModalOpen }) {
+function Modal({ handleDifficultyClick, closeModal, isModalOpen, text }) {
   return (
     <>
       {isModalOpen && (
         <div className="modal">
-          <h3 onClick={closeModal}>Select a Difficulty</h3>
+          <h3 onClick={closeModal}>{text}</h3>
           <Button
             className="button"
             text="Easy"
