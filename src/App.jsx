@@ -4,6 +4,7 @@ import { shuffleArray } from "./utils";
 import GameBoard from "./components/GameBoard";
 import Header from "./components/Header";
 import Modal from "./components/Modal";
+import EndGameModal from "./components/EndGameModal";
 
 function App() {
   const [pokemonData, setPokemonData] = useState([]);
@@ -14,11 +15,17 @@ function App() {
   const [difficulty, setDifficulty] = useState("Easy");
   const [cardCount, setCardCount] = useState(6);
   const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isEndGameModalOpen, setIsEndGameModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const closeEndGameModal = () => {
+    setIsEndGameModalOpen(false);
+    resetAll();
   };
 
   // Set the difficulty level
@@ -81,6 +88,12 @@ function App() {
     }
   }, [score]);
 
+  useEffect(() => {
+    if (score === cardCount) {
+      setIsEndGameModalOpen(true);
+    }
+  });
+
   // Logic for checking if a new pokemon was clicked and updating clicked to true
   const handleClick = (pokemonName) => {
     if (isProcessing) return;
@@ -88,6 +101,7 @@ function App() {
       const updatedData = prevData.map((pokemon) => {
         if (pokemon.name === pokemonName) {
           if (pokemon.clicked) {
+            setIsEndGameModalOpen(true);
             resetAll();
             return pokemon;
           } else {
@@ -181,6 +195,7 @@ function App() {
       <Header />
       <Modal
         handleDifficultyClick={handleDifficultyClick}
+        closeModal={closeModal}
         isModalOpen={isModalOpen}
         text="Select a difficulty:"
       />
@@ -194,6 +209,10 @@ function App() {
           flipped={flipped}
         />
       </div>
+      <EndGameModal
+        isEndGameModalOpen={isEndGameModalOpen}
+        closeEndGameModal={closeEndGameModal}
+      />
     </>
   );
 }

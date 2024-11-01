@@ -1,11 +1,9 @@
 import "../styles.css/Button.css";
-function Button({ text, handleClick }) {
+function Button({ id, className, text, handleClick }) {
   return (
-    <>
-      <button className="difficulty-button" id={text} onClick={handleClick}>
-        {text}
-      </button>
-    </>
+    <button id={id} className={className} onClick={handleClick}>
+      {text}
+    </button>
   );
 }
 
