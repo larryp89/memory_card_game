@@ -9,31 +9,10 @@ function GameBoard({
   score,
   bestScore,
   flipped,
-  handleDifficultyClick,
 }) {
   return (
     <>
       <ScoreBoard score={score} bestScore={bestScore} />
-      <Button
-        className="button"
-        text="Easy"
-        handleClick={handleDifficultyClick}
-      />
-      <Button
-        className="button"
-        text="Medium"
-        handleClick={handleDifficultyClick}
-      />
-      <Button
-        className="button"
-        text="Hard"
-        handleClick={handleDifficultyClick}
-      />
-      <Button
-        className="button"
-        text="Insane"
-        handleClick={handleDifficultyClick}
-      />
 
       <div className="gameboard">
         {pokemonData.map((pokemon) => (

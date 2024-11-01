@@ -1,6 +1,6 @@
 .pokemon-card {
   width: 100px;
-  height: 200px;
+  height: 150px;
   cursor: pointer;
   perspective: 1000px;
   transform-style: preserve-3d;
@@ -27,7 +27,7 @@
 
 .card-front:hover {
   opacity: 1;
-  border: 3px solid rgb(53, 53, 165)
+  border: 3px solid rgb(53, 53, 165);
 }
 
 .card-back {
@@ -36,5 +36,5 @@
 
 .card-back img {
   width: 100px;
-  height: 200px;
+  height: 150px;
 }

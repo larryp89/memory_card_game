@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { shuffleArray } from "./utils";
 import GameBoard from "./components/GameBoard";
 import Header from "./components/Header";
+import Modal from "./components/Modal";
 
 function App() {
   const [pokemonData, setPokemonData] = useState([]);
@@ -12,26 +13,33 @@ function App() {
   const [flipped, setFlipped] = useState(false);
   const [difficulty, setDifficulty] = useState("Easy");
   const [cardCount, setCardCount] = useState(6);
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  // Close modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   // Set the difficulty level
   const handleDifficultyClick = (e) => {
     setDifficulty(e.target.id);
+    closeModal();
   };
 
   // Update card count based on difficulty
   useEffect(() => {
     if (difficulty === "Easy") {
       setCardCount(6);
-      resetAll();
+      // resetAll();
     } else if (difficulty === "Medium") {
       setCardCount(12);
-      resetAll();
+      // resetAll();
     } else if (difficulty === "Hard") {
       setCardCount(18);
-      resetAll();
+      // resetAll();
     } else if (difficulty === "Insane") {
       setCardCount(36);
-      resetAll();
+      // resetAll();
     }
   }, [difficulty]);
 
@@ -138,9 +146,9 @@ function App() {
       } else {
         // Fetch list of pokemon data from the API
         const list = await getPokemonList();
-        // Use Promise.all to wait for all the asynchronous operations to finish.
+        // Use Promise.all to wait for all t  he asynchronous operations to finish.
         const pokemonCardData = await Promise.all(
-          // Note that must use async anonymous function in order to then use await
+          // Must use anonymous async function in order to then use await
           list.map(async (entry) => {
             // For each entry, return the object via getPokemonDetails
             return await getPokemonDetails(entry.url);
@@ -148,6 +156,7 @@ function App() {
         );
         setPokemonData(pokemonCardData);
         localStorage.setItem("pokemonData", JSON.stringify(pokemonCardData));
+        setPokemonData(pokemonCardData.slice(0, cardCount)); // Limit to card count
       }
     };
 
@@ -165,21 +174,25 @@ function App() {
     );
     resetScoreBoard();
     setFlipped(false);
+    setIsModalOpen(true);
   };
 
   return (
     <>
       <Header />
+      <Modal
+        handleDifficultyClick={handleDifficultyClick}
+        closeModal={closeModal}
+        isModalOpen={isModalOpen}
+      />
       <div className="game-area">
         <GameBoard
           pokemonData={pokemonData}
-          setPokemonData={setPokemonData}
           handleClick={handleClick}
           resetBoard={resetAll}
           score={score}
           bestScore={bestScore}
           flipped={flipped}
-          handleDifficultyClick={handleDifficultyClick}
         />
       </div>
     </>
