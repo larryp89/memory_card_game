@@ -6,7 +6,6 @@ import Button from "./Button";
 function GameBoard({
   pokemonData,
   handleClick,
-  resetBoard,
   score,
   bestScore,
   flipped,
@@ -47,7 +46,6 @@ function GameBoard({
           />
         ))}
       </div>
-      <button className="difficulty-button" onClick={resetBoard}>Reset</button>
     </>
   );
 }

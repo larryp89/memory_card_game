@@ -21,12 +21,16 @@ function App() {
   useEffect(() => {
     if (difficulty === "Easy") {
       setCardCount(6);
+      resetAll();
     } else if (difficulty === "Medium") {
       setCardCount(12);
+      resetAll();
     } else if (difficulty === "Hard") {
       setCardCount(18);
+      resetAll();
     } else if (difficulty === "Insane") {
       setCardCount(36);
+      resetAll();
     }
   }, [difficulty]);
 
@@ -152,16 +156,18 @@ function App() {
   };
 
   return (
-    <GameBoard
-      pokemonData={pokemonData}
-      setPokemonData={setPokemonData}
-      handleClick={handleClick}
-      resetBoard={resetAll}
-      score={score}
-      bestScore={bestScore}
-      flipped={flipped}
-      handleDifficultyClick={handleDifficultyClick}
-    />
+    <div className="game-area">
+      <GameBoard
+        pokemonData={pokemonData}
+        setPokemonData={setPokemonData}
+        handleClick={handleClick}
+        resetBoard={resetAll}
+        score={score}
+        bestScore={bestScore}
+        flipped={flipped}
+        handleDifficultyClick={handleDifficultyClick}
+      />
+    </div>
   );
 }
 
