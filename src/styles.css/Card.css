@@ -27,6 +27,7 @@
 
 .card-front:hover {
   opacity: 1;
+  border: 3px solid rgb(53, 53, 165)
 }
 
 .card-back {

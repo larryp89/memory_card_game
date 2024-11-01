@@ -29,8 +29,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-image: url(./assets/background.png);
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  background-attachment: fixed; /* Fix the background image */
 }
 
 h1 {

@@ -2,6 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { shuffleArray } from "./utils";
 import GameBoard from "./components/GameBoard";
+import Header from "./components/Header";
 
 function App() {
   const [pokemonData, setPokemonData] = useState([]);
@@ -12,7 +13,7 @@ function App() {
   const [difficulty, setDifficulty] = useState("Easy");
   const [cardCount, setCardCount] = useState(6);
 
-  // Set the difficultl level
+  // Set the difficulty level
   const handleDifficultyClick = (e) => {
     setDifficulty(e.target.id);
   };
@@ -33,6 +34,16 @@ function App() {
       resetAll();
     }
   }, [difficulty]);
+
+  // Check local storage for a best score
+  useEffect(() => {
+    // Get any previous top score from local storage
+    const prevTopScore = JSON.parse(localStorage.getItem("prevTopScore"));
+
+    if (prevTopScore) {
+      setBestScore(prevTopScore);
+    }
+  }, []);
 
   // Batch update when a pokemon card is clicked
   useEffect(() => {
@@ -59,6 +70,7 @@ function App() {
   useEffect(() => {
     if (score > bestScore) {
       setBestScore(score);
+      localStorage.setItem("prevTopScore", JSON.stringify(score));
     }
   }, [score]);
 
@@ -156,18 +168,21 @@ function App() {
   };
 
   return (
-    <div className="game-area">
-      <GameBoard
-        pokemonData={pokemonData}
-        setPokemonData={setPokemonData}
-        handleClick={handleClick}
-        resetBoard={resetAll}
-        score={score}
-        bestScore={bestScore}
-        flipped={flipped}
-        handleDifficultyClick={handleDifficultyClick}
-      />
-    </div>
+    <>
+      <Header />
+      <div className="game-area">
+        <GameBoard
+          pokemonData={pokemonData}
+          setPokemonData={setPokemonData}
+          handleClick={handleClick}
+          resetBoard={resetAll}
+          score={score}
+          bestScore={bestScore}
+          flipped={flipped}
+          handleDifficultyClick={handleDifficultyClick}
+        />
+      </div>
+    </>
   );
 }
 
