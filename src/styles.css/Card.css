@@ -21,7 +21,12 @@
 }
 
 .card-front {
-  background-color: transparent;
+  background-color: white;
+  opacity: 0.8;
+}
+
+.card-front:hover{
+  opacity: 1;
 }
 
 .card-back {

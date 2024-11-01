@@ -15,10 +15,26 @@ function GameBoard({
   return (
     <>
       <ScoreBoard score={score} bestScore={bestScore} />
-      <Button text="Easy" handleClick={handleDifficultyClick} />
-      <Button text="Medium" handleClick={handleDifficultyClick} />
-      <Button text="Hard" handleClick={handleDifficultyClick} />
-      <Button text="Insane" handleClick={handleDifficultyClick} />
+      <Button
+        className="button"
+        text="Easy"
+        handleClick={handleDifficultyClick}
+      />
+      <Button
+        className="button"
+        text="Medium"
+        handleClick={handleDifficultyClick}
+      />
+      <Button
+        className="button"
+        text="Hard"
+        handleClick={handleDifficultyClick}
+      />
+      <Button
+        className="button"
+        text="Insane"
+        handleClick={handleDifficultyClick}
+      />
 
       <div className="gameboard">
         {pokemonData.map((pokemon) => (
@@ -31,7 +47,7 @@ function GameBoard({
           />
         ))}
       </div>
-      <button onClick={resetBoard}>Reset</button>
+      <button className="difficulty-button" onClick={resetBoard}>Reset</button>
     </>
   );
 }
