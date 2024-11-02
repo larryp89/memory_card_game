@@ -1,5 +1,29 @@
 .gameboard {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 0.5rem;
+  gap: 2rem;
+  align-items: center; /* This will work now */
+  justify-items: center; /* This centers items horizontally */
+}
+
+/* Add this class to your Card component's outer div */
+.grid-item {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Mobile view: Small screens */
+@media (max-width: 500px) {
+  .gameboard {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Tablet view */
+@media (min-width: 501px) and (max-width: 800px) {
+  .gameboard {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

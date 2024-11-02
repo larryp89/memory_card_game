@@ -1,7 +1,6 @@
 import "../styles/GameBoard.css";
 import Card from "./Card";
 import ScoreBoard from "./ScoreBoard";
-import Button from "./Button";
 
 function GameBoard({ pokemonData, handleClick, score, bestScore, flipped }) {
   return (

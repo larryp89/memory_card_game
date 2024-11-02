@@ -42,6 +42,7 @@
   font-size: 1rem;
   transition: background-color 0.3s ease;
   margin: 0.5rem 1;
+  width: 100%;
   max-width: 200px;
 }
 
@@ -69,4 +70,29 @@
 
 .modal-close:hover {
   color: #333;
+}
+
+/* Mobile view: Small screens */
+@media (max-width: 500px) {
+  .modal {
+    max-width: 300px;
+  }
+
+  .modal .button{
+    max-width: 100px;
+  }
+}
+
+/* Tablet view */
+@media (min-width: 501px) and (max-width: 800px) {
+  .modal {
+    max-width: 400px;
+  }
+}
+
+/* Tablet view */
+@media (min-width: 801px) {
+  .modal {
+    max-width: 500px;
+  }
 }
