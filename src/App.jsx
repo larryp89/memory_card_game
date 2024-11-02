@@ -206,7 +206,7 @@ function App() {
           flipped={flipped}
         />
       </div>
-      <EndGameModal isWinner={isWinner} closeEndGameModal={closeEndGameModal} />
+      <EndGameModal isWinner={isWinner} closeEndGameModal={closeEndGameModal} score={score} cardCount={cardCount} />
     </>
   );
 }
