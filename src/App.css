@@ -8,5 +8,8 @@
 .game-area {
   border-radius: 10px;
   padding: 2rem 1rem;
-  opacity: 0.8
+  opacity: 0.8;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem
 }

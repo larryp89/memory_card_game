@@ -1,4 +1,4 @@
-import "../styles.css/Card.css";
+import "../styles/Card.css";
 import backImage from "../assets/pokemon-card.png";
 
 function Card({ pokemonName, pokemonImage, handleClick, flipped }) {

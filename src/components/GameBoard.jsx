@@ -1,4 +1,4 @@
-import "../styles.css/GameBoard.css";
+import "../styles/GameBoard.css";
 import Card from "./Card";
 import ScoreBoard from "./ScoreBoard";
 import Button from "./Button";

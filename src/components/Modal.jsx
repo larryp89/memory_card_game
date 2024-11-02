@@ -1,5 +1,5 @@
 import Button from "./Button";
-import "../styles.css/Modal.css";
+import "../styles/Modal.css";
 
 function Modal({ handleDifficultyClick, closeModal, isModalOpen, text }) {
   return (

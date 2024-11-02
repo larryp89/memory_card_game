@@ -15,8 +15,8 @@ function App() {
   const [difficulty, setDifficulty] = useState("Easy");
   const [cardCount, setCardCount] = useState(6);
   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [isEndGameModalOpen, setIsEndGameModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isWinner, setIsWinner] = useState(null);
 
   // Close modal
   const closeModal = () => {
@@ -24,13 +24,14 @@ function App() {
   };
 
   const closeEndGameModal = () => {
-    setIsEndGameModalOpen(false);
+    setIsProcessing(true);
     resetAll();
   };
 
   // Set the difficulty level
   const handleDifficultyClick = (e) => {
     setDifficulty(e.target.id);
+    setIsProcessing(false);
     closeModal();
   };
 
@@ -90,7 +91,7 @@ function App() {
 
   useEffect(() => {
     if (score === cardCount) {
-      setIsEndGameModalOpen(true);
+      setIsWinner(true);
     }
   });
 
@@ -101,8 +102,7 @@ function App() {
       const updatedData = prevData.map((pokemon) => {
         if (pokemon.name === pokemonName) {
           if (pokemon.clicked) {
-            setIsEndGameModalOpen(true);
-            resetAll();
+            setIsWinner(false);
             return pokemon;
           } else {
             setClickedPokemon(pokemonName); // Set to trigger score update in useEffect
@@ -188,6 +188,7 @@ function App() {
     resetScoreBoard();
     setFlipped(false);
     setIsModalOpen(true);
+    setIsWinner(null);
   };
 
   return (
@@ -209,10 +210,7 @@ function App() {
           flipped={flipped}
         />
       </div>
-      <EndGameModal
-        isEndGameModalOpen={isEndGameModalOpen}
-        closeEndGameModal={closeEndGameModal}
-      />
+      <EndGameModal isWinner={isWinner} closeEndGameModal={closeEndGameModal} />
     </>
   );
 }
