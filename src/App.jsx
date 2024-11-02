@@ -7,13 +7,14 @@ import Modal from "./components/Modal";
 import EndGameModal from "./components/EndGameModal";
 
 function App() {
+  const [allPokemonData, setAllPokemonData] = useState([]); // Store all Pokemon data
   const [pokemonData, setPokemonData] = useState([]);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [clickedPokemon, setClickedPokemon] = useState(null);
   const [flipped, setFlipped] = useState(false);
   const [difficulty, setDifficulty] = useState("Easy");
-  const [cardCount, setCardCount] = useState(6);
+  const [cardCount, setCardCount] = useState(6); // Default to Easy
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isWinner, setIsWinner] = useState(null);
@@ -28,35 +29,46 @@ function App() {
     resetAll();
   };
 
-  // Set the difficulty level
+  // Set the difficulty level and update card count
   const handleDifficultyClick = (e) => {
-    setDifficulty(e.target.id);
+    const newDifficulty = e.target.id;
+    setDifficulty(newDifficulty);
+
+    // Update card count based on new difficulty
+    let newCardCount;
+    switch (newDifficulty) {
+      case "Easy":
+        newCardCount = 6;
+        break;
+      case "Medium":
+        newCardCount = 12;
+        break;
+      case "Hard":
+        newCardCount = 18;
+        break;
+      case "Insane":
+        newCardCount = 36;
+        break;
+      default:
+        newCardCount = 6;
+    }
+    setCardCount(newCardCount);
+
+    // Update displayed Pokemon based on new card count
+    setPokemonData(
+      allPokemonData.slice(0, newCardCount).map((pokemon) => ({
+        ...pokemon,
+        clicked: false,
+      }))
+    );
+
     setIsProcessing(false);
     closeModal();
   };
 
-  // Update card count based on difficulty
-  useEffect(() => {
-    if (difficulty === "Easy") {
-      setCardCount(6);
-      // resetAll();
-    } else if (difficulty === "Medium") {
-      setCardCount(12);
-      // resetAll();
-    } else if (difficulty === "Hard") {
-      setCardCount(18);
-      // resetAll();
-    } else if (difficulty === "Insane") {
-      setCardCount(36);
-      // resetAll();
-    }
-  }, [difficulty]);
-
   // Check local storage for a best score
   useEffect(() => {
-    // Get any previous top score from local storage
     const prevTopScore = JSON.parse(localStorage.getItem("prevTopScore"));
-
     if (prevTopScore) {
       setBestScore(prevTopScore);
     }
@@ -65,18 +77,16 @@ function App() {
   // Batch update when a pokemon card is clicked
   useEffect(() => {
     if (clickedPokemon) {
-      setIsProcessing(true); // Prevent further clicks while processing
+      setIsProcessing(true);
       setScore((prevScore) => prevScore + 1);
 
-      // Flip all cards and shuffle
       setFlipped((prevFlip) => !prevFlip);
       setTimeout(() => {
         setPokemonData((prevData) => shuffleArray(prevData));
-        setFlipped((prevFlip) => !prevFlip); // Reset flipped back after 1 second
-        setIsProcessing(false); // Allow clicks again
+        setFlipped((prevFlip) => !prevFlip);
+        setIsProcessing(false);
       }, 1000);
 
-      // Reset clickedPokemon after processing
       setClickedPokemon(null);
     }
   }, [clickedPokemon]);
@@ -87,15 +97,14 @@ function App() {
       setBestScore(score);
       localStorage.setItem("prevTopScore", JSON.stringify(score));
     }
-  }, [score]);
+  }, [score, bestScore]);
 
   useEffect(() => {
     if (score === cardCount) {
       setIsWinner(true);
     }
-  });
+  }, [score, cardCount]);
 
-  // Logic for checking if a new pokemon was clicked and updating clicked to true
   const handleClick = (pokemonName) => {
     if (isProcessing) return;
     setPokemonData((prevData) => {
@@ -105,13 +114,12 @@ function App() {
             setIsWinner(false);
             return pokemon;
           } else {
-            setClickedPokemon(pokemonName); // Set to trigger score update in useEffect
+            setClickedPokemon(pokemonName);
             return { ...pokemon, clicked: true };
           }
         }
         return pokemon;
       });
-
       return updatedData;
     });
   };
@@ -120,22 +128,15 @@ function App() {
     setScore(0);
   };
 
-  // Get first 50 pokemon list data from API
-  // Must define an async function as using await
   const getPokemonList = async () => {
-    // Await the promise from fetch, which returns the response object
     const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=50");
-    // Check if the response is okay (status in the range 200-299)
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    // Extract the JSON data (returned as a promise) from the response object
     const data = await response.json();
-    // Return only the results array from the data object, which contains the Pokémon
     return data.results;
   };
 
-  // Returns the name and image for url
   const getPokemonDetails = async (url) => {
     const response = await fetch(url);
     const data = await response.json();
@@ -145,42 +146,37 @@ function App() {
     return { name, image, clicked };
   };
 
-  // For each pokemon, get data from local storage or fetch from API and set for pokemonCardData
+  // Initial data fetch - only runs once
   useEffect(() => {
-    // Have to have a function within useEffect as cannot use await directly in useEffect
     const fetchData = async () => {
-      // Attempt to get any cached data from local storage
+      let pokemonCardData;
+      // Retrieve any cashed data
       const cachedData = localStorage.getItem("pokemonData");
-      // If there's cached data, use it to set the state
+      // If there is cached data, parse it
       if (cachedData) {
-        const parsedData = JSON.parse(cachedData);
-        setPokemonData(parsedData.slice(0, cardCount)); // Limit to card count
-        // Otherwise
+        pokemonCardData = JSON.parse(cachedData);
       } else {
-        // Fetch list of pokemon data from the API
+        // If there isn't, make API call and then set as local storag
         const list = await getPokemonList();
-        // Use Promise.all to wait for all t  he asynchronous operations to finish.
-        const pokemonCardData = await Promise.all(
-          // Must use anonymous async function in order to then use await
+        pokemonCardData = await Promise.all(
           list.map(async (entry) => {
-            // For each entry, return the object via getPokemonDetails
             return await getPokemonDetails(entry.url);
           })
         );
-        setPokemonData(pokemonCardData);
         localStorage.setItem("pokemonData", JSON.stringify(pokemonCardData));
-        setPokemonData(pokemonCardData.slice(0, cardCount)); // Limit to card count
       }
+
+      setAllPokemonData(pokemonCardData); // Store all Pokemon data
+      setPokemonData(pokemonCardData.slice(0, cardCount)); // Set initial display data
     };
 
     fetchData();
-  }, [cardCount]);
+  }, []); // Empty dependency array - only runs once
 
-  // Reset all "clicked" to false
   const resetAll = () => {
-    setPokemonData((prevData) =>
-      // Set new data to previous data but copy each pokemon, updating clicked to false
-      prevData.map((pokemon) => ({
+    // Reset using current cardCount but maintain order from allPokemonData
+    setPokemonData(
+      allPokemonData.slice(0, cardCount).map((pokemon) => ({
         ...pokemon,
         clicked: false,
       }))

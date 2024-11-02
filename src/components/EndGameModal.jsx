@@ -19,7 +19,7 @@ function EndGameModal({ closeEndGameModal, isWinner }) {
           )}
           {isWinner === false && (
             <>
-              <h1>Sucks to suck!</h1>
+              <h1>Oops! Sucks to suck!</h1>
               <Button
                 id="play-again"
                 className="button"
